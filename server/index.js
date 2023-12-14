@@ -26,7 +26,7 @@ mongoose.connection.on("error", (err) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("hello world");
+  res.send("HelloWorld !");
 });
 
 const transporter = nodemailer.createTransport({
