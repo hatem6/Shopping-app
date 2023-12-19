@@ -15,8 +15,8 @@
                 <div class="card-body">
                   <ul>
                     <li>
-                      <a href="#" @click="sendDataToProducts('All')"
-                        >All-Products</a
+                      <router-link to="/" @click="sendDataToProducts('All')"
+                        >All-Products</router-link
                       >
                     </li>
                   </ul>
@@ -31,8 +31,10 @@
                 <div class="card-body">
                   <ul>
                     <li>
-                      <a href="#" @click="sendDataToProducts('man', 't-shirt')"
-                        >T-shirts</a
+                      <router-link
+                        to="/"
+                        @click="sendDataToProducts('man', 't-shirt')"
+                        >T-shirts</router-link
                       >
                     </li>
                     <li>

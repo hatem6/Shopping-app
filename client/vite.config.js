@@ -1,7 +1,13 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import vue from "@vitejs/plugin-vue";
+import { defineConfig } from "vite";
+import vueLayouts from "vite-plugin-vue-layouts";
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
-})
+  plugins: [
+    vue(),
+    vueLayouts({
+      // Customize as needed, for example:
+      // layouts: 'src/layouts' // Path to your layout components
+    }),
+  ],
+});

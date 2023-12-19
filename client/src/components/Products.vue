@@ -84,7 +84,7 @@ export default {
           "https://my-json-server.typicode.com/hatem6/projetCoteClient/Products"
         )
         .then((response) => {
-          console.table(response.data);
+          //console.table(response.data);
           this.Products = response.data;
         })
         .catch((error) => {

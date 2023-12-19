@@ -1,11 +1,17 @@
 <template>
   <div class="">
     <Navbar></Navbar>
+    <br /><br /><br />
     <div class="container">
-      <Categorie v-if="!isAboutRoute && !isContactRoute"></Categorie>
-      <router-view></router-view>
+      <Categorie
+        v-if="
+          !isAboutRoute && !isContactRoute && !isShopRoute && !isCheckoutRoute
+        "
+      ></Categorie>
+      <router-view class="components"></router-view>
     </div>
-    <Footer></Footer>
+    <br /><br /><br />
+    <Footer class="footer"> </Footer>
   </div>
 </template>
 <script>
@@ -22,15 +28,29 @@ export default {
     return {
       isAboutRoute: false,
       isContactRoute: false,
+      isShopRoute: false,
+      isCheckoutRoute: false,
     };
   },
   watch: {
     $route(to) {
       this.isAboutRoute = to.name === "about";
       this.isContactRoute = to.name === "contact"; // Check the route name
+      this.isShopRoute = to.name === "shop";
+      this.isCheckoutRoute = to.name === "checkout";
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+  display: flex;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    display: block;
+  }
+}
+</style>

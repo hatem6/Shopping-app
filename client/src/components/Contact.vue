@@ -1,6 +1,6 @@
 <template>
   <section class="contact spad">
-    <div class="container">
+    <div class="">
       <div class="row">
         <div class="col-lg-6 col-md-6">
           <div class="contact__content">
@@ -44,9 +44,6 @@
                 ></textarea>
                 <button type="submit" class="btn">Send Message</button>
               </form>
-              <div v-if="showSuccessAlert" id="alert" style="display: none">
-                Message sent successfully!
-              </div>
             </div>
           </div>
         </div>
@@ -70,29 +67,36 @@
 
 <script>
 import axios from "axios";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 export default {
   data() {
     return {
       fullname: "",
       email: "",
       message: "",
-      showSuccessAlert: false,
     };
   },
   methods: {
     async submitForm() {
       const { fullname, email, message } = this;
       try {
-        const response = await axios.post("http://localhost:3001/contact", {
-          fullname,
-          email,
-          message,
-        });
+        const response = await axios.post(
+          "https://server-qsgu4svzv-hatem6.vercel.app/contact",
+          {
+            fullname,
+            email,
+            message,
+          }
+        );
         if (response.status === 200) {
-          this.showSuccessAlert = true;
-          this.fullname = "";
-          this.email = "";
-          this.message = "";
+          toast.success("Message sent successfully!", {
+            autoClose: 3000, // Optionally set autoClose time
+            onClose: () => {
+              // Code to execute after toast auto-closes
+              this.message = "";
+            },
+          });
         }
       } catch (error) {
         console.error("Error submitting form:", error);
@@ -105,7 +109,6 @@ export default {
 /*---------------------
   Contact
 -----------------------*/
-
 .contact {
   padding-top: 80px;
   padding-bottom: 80px;

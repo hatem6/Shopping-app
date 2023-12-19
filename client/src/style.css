@@ -2,10 +2,6 @@
   Categories
 -----------------------*/
 
-.container {
-  display: flex;
-}
-
 .categories .container-fluid {
   padding-right: 5px;
 }

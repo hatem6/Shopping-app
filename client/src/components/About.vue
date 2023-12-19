@@ -30,16 +30,48 @@
                   <span>Available size:</span>
                   <div class="size__btn">
                     <label for="size-xs" class="active">
-                      <p id="size-xs" class="size-option" data-value="xs">xs</p>
+                      <p
+                        id="size-xs"
+                        class="size-option"
+                        :class="{ selected: productSize === 'XS' }"
+                        data-value="xs"
+                        @click="setProductSize('XS')"
+                      >
+                        xs
+                      </p>
                     </label>
                     <label for="size-s">
-                      <p id="size-s" class="size-option" data-value="s">s</p>
+                      <p
+                        id="size-s"
+                        class="size-option"
+                        :class="{ selected: productSize === 'S' }"
+                        data-value="s"
+                        @click="setProductSize('S')"
+                      >
+                        s
+                      </p>
                     </label>
                     <label for="size-m">
-                      <p id="size-m" class="size-option" data-value="m">m</p>
+                      <p
+                        id="size-m"
+                        class="size-option"
+                        :class="{ selected: productSize === 'M' }"
+                        data-value="m"
+                        @click="setProductSize('M')"
+                      >
+                        m
+                      </p>
                     </label>
                     <label for="size-l">
-                      <p id="size-l" class="size-option" data-value="l">l</p>
+                      <p
+                        id="size-l"
+                        class="size-option"
+                        :class="{ selected: productSize === 'L' }"
+                        data-value="l"
+                        @click="setProductSize('L')"
+                      >
+                        l
+                      </p>
                     </label>
                   </div>
                 </li>
@@ -53,11 +85,11 @@
               <div class="quantity">
                 <span>Quantity:</span>
                 <div class="pro-qty">
-                  <input type="text" value="1" />
+                  <input type="text" v-model="productQuantity" />
                 </div>
               </div>
-              <a href="#" class="cart-btn" @click="sendDataToNavbar">
-                Add to cart</a
+              <router-link to="#" class="cart-btn" @click="sendDataToNavbar">
+                Add to cart</router-link
               >
               <ul>
                 <li>
@@ -123,22 +155,57 @@
 </template>
 <script>
 import { eventBus } from "./eventBus";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 export default {
   data() {
     return {
       productName: "",
       productPrice: "",
       productUrl: "",
+      productSize: "",
+      productQuantity: 1,
     };
   },
   methods: {
+    setProductSize(size) {
+      this.productSize = size;
+    },
     sendDataToNavbar() {
-      const dataToSend = {
-        count: 1,
-      };
-      eventBus.emit("dataToNavbar", dataToSend);
+      if (
+        this.productSize === "" ||
+        this.productQuantity === "" ||
+        parseInt(this.productQuantity) <= 0
+      ) {
+        const errorMessage =
+          this.productSize === ""
+            ? "Choose your Size please!"
+            : "Choose your Quantity please!";
+        toast.error(errorMessage, {
+          autoClose: 3000,
+        });
+      } else {
+        const dataToSend = {
+          productName: this.productName,
+          productPrice: this.productPrice,
+          productUrl: this.productUrl,
+          productQuantity: this.productQuantity,
+          productSize: this.productSize,
+        };
+        eventBus.emit("dataToNavbar", dataToSend);
+        this.showSuccessMessage();
+      }
+    },
+    showSuccessMessage() {
+      toast.success("Product added successfully", {
+        autoClose: 2000,
+      });
+      setTimeout(() => {
+        this.$router.push("/shop");
+      }, 3000);
     },
   },
+
   created() {
     // Accessing route params
     this.productName = this.$route.params.productName;
@@ -147,4 +214,8 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.selected {
+  color: #ca1515; /* Set the color you prefer for the selected size */
+}
+</style>
