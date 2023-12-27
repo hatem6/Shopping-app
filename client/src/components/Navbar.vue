@@ -40,6 +40,9 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/contact">Contact</router-link>
           </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/signup">Sign Up</router-link>
+          </li>
         </ul>
       </div>
       <div

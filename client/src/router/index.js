@@ -4,6 +4,8 @@ import Checkout from "../components/Checkout.vue";
 import Contact from "../components/Contact.vue";
 import Products from "../components/Products.vue";
 import Shop from "../components/Shop.vue";
+import Signup from "../components/Signup.vue";
+
 const routes = [
   {
     path: "/",
@@ -30,6 +32,11 @@ const routes = [
     path: "/checkout",
     name: "checkout",
     component: Checkout,
+  },
+  {
+    path: "/signup",
+    name: "signup",
+    component: Signup,
   },
   // Other routes...
 ];
