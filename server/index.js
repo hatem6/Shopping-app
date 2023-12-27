@@ -43,9 +43,10 @@ app.use("/get", requestRouter);
 app.post("/contact", async (req, res) => {
   const { fullname, email, message } = req.body;
   try {
+    /*
     const newClient = new ClientModel({ fullname, email, message });
     await newClient.save();
-
+    */
     const msg = {
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_USER,
@@ -63,7 +64,7 @@ app.post("/contact", async (req, res) => {
         res.status(500).json({ error: "Failed to send email" });
       } else {
         console.log("Email sent:", info.response);
-        res.json(newClient);
+        res.json(msg);
       }
     });
   } catch (error) {
