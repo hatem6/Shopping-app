@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 import About from "../components/About.vue";
+import Account from "../components/Account.vue";
 import Checkout from "../components/Checkout.vue";
 import Contact from "../components/Contact.vue";
 import Products from "../components/Products.vue";
 import Shop from "../components/Shop.vue";
+import Signin from "../components/Signin.vue";
 import Signup from "../components/Signup.vue";
 
 const routes = [
@@ -37,6 +39,16 @@ const routes = [
     path: "/signup",
     name: "signup",
     component: Signup,
+  },
+  {
+    path: "/signin",
+    name: "signin",
+    component: Signin,
+  },
+  {
+    path: "/account",
+    name: "account",
+    component: Account,
   },
   // Other routes...
 ];

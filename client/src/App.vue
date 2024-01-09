@@ -3,11 +3,8 @@
     <Navbar></Navbar>
     <br /><br /><br />
     <div class="container">
-      <Categorie
-        v-if="
-          !isAboutRoute && !isContactRoute && !isShopRoute && !isCheckoutRoute
-        "
-      ></Categorie>
+      <br />
+      <Categorie v-if="!RouteHidden"></Categorie>
       <router-view class="components"></router-view>
     </div>
     <br /><br /><br />
@@ -26,18 +23,19 @@ export default {
   },
   data() {
     return {
-      isAboutRoute: false,
-      isContactRoute: false,
-      isShopRoute: false,
-      isCheckoutRoute: false,
+      RouteHidden: false,
     };
   },
   watch: {
     $route(to) {
-      this.isAboutRoute = to.name === "about";
-      this.isContactRoute = to.name === "contact"; // Check the route name
-      this.isShopRoute = to.name === "shop";
-      this.isCheckoutRoute = to.name === "checkout";
+      this.RouteHidden =
+        to.name === "about" ||
+        to.name === "contact" ||
+        to.name === "shop" ||
+        to.name === "signup" ||
+        to.name === "signin" ||
+        to.name === "checkout" ||
+        to.name === "account";
     },
   },
 };
