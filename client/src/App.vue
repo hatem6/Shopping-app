@@ -28,6 +28,7 @@ export default {
   },
   watch: {
     $route(to) {
+      /* to hidden the categorie component from this routes */
       this.RouteHidden =
         to.name === "about" ||
         to.name === "contact" ||
