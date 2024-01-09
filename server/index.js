@@ -40,6 +40,39 @@ const transporter = nodemailer.createTransport({
 
 app.use("/get", requestRouter);
 
+app.post("/signup", async (req, res) => {
+  const { fullname, adress, phone, email, password } = req.body;
+  try {
+    const newClient = new ClientModel({
+      fullname,
+      adress,
+      phone,
+      email,
+      password,
+    });
+    res.json(newClient);
+    await newClient.save();
+  } catch (error) {
+    console.error("Error saving Client:", error);
+    res.status(500).json({ error: "Failed to save Client" });
+  }
+});
+
+app.post("/check", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await ClientModel.findOne({ email: email });
+    if (!user) {
+      res.status(404).send("Email not found");
+    } else {
+      res.send(user);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error finding user");
+  }
+});
+
 app.post("/contact", async (req, res) => {
   const { fullname, email, message } = req.body;
   try {
