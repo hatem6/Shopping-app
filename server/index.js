@@ -63,7 +63,7 @@ app.post("/check", async (req, res) => {
   try {
     const user = await ClientModel.findOne({ email: email });
     if (!user) {
-      res.status(404).send("Email not found");
+      res.send(false);
     } else {
       res.send(user);
     }
