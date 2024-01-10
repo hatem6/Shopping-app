@@ -8,11 +8,12 @@
           </h3>
         </div>
       </div>
-      <form onSubmit="event.preventDefault()" class="space-y-5">
+      <form @submit.prevent="test" class="space-y-5">
         <div>
           <label class="font-medium"> Email </label>
           <input
             type="email"
+            v-model="email"
             required
             class="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
           />
@@ -21,6 +22,7 @@
           <label class="font-medium"> Password </label>
           <input
             type="password"
+            v-model="password"
             required
             class="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
           />
@@ -47,7 +49,59 @@
     </div>
   </main>
 </template>
-<script></script>
+<script>
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+import axios from "axios";
+export default {
+  data() {
+    return {
+      email: "",
+      password: "",
+    };
+  },
+  methods: {
+    async test() {
+      const email = this.email;
+      const password = this.password;
+      let myjson = {
+        email,
+      };
+      try {
+        const response = await axios.post(
+          "http://localhost:3001/check",
+          myjson
+        );
+        if (response.data == false) {
+          console.log("Email not found");
+          toast.error("Email not found !", {
+            autoClose: 2000, // Optionally set autoClose time
+          });
+        } else {
+          if (response.data.password != password) {
+            console.log("invalid password");
+            toast.error("Invalid Password!", {
+              autoClose: 2000, // Optionally set autoClose time
+            });
+          } else {
+            console.log("success");
+            let account = {
+              fullname: response.data.fullname,
+              adress: response.data.adress,
+              phone: response.data.phone,
+              email: response.data.email,
+            };
+            localStorage.setItem("Account", JSON.stringify(account));
+            window.location.href = "/account";
+          }
+        }
+      } catch (error) {
+        console.error("Error while checking the account :", error);
+      }
+    },
+  },
+};
+</script>
 <style scoped>
 @tailwind base;
 @tailwind components;

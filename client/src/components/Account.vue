@@ -1,22 +1,12 @@
 <template>
   <div
-    class="my-4 max-w-screen-md h-screen border px-4 shadow-xl sm:mx-4 sm:rounded-xl sm:px-4 sm:py-4 md:mx-auto"
+    class="my-4 border px-4 shadow-xl sm:mx-4 sm:rounded-xl sm:px-4 sm:py-4 md:mx-auto"
   >
     <div class="flex flex-col border-b py-4 sm:flex-row sm:items-start">
       <div class="shrink-0 mr-auto sm:py-3">
         <p class="font-medium">Account Details</p>
         <p class="text-sm text-gray-600">Edit your account details</p>
       </div>
-      <button
-        class="mr-2 hidden rounded-lg border-2 px-4 py-2 font-medium text-gray-500 sm:inline focus:outline-none focus:ring hover:bg-gray-200"
-      >
-        Cancel
-      </button>
-      <button
-        class="hidden rounded-lg border-2 border-transparent bg-gray-950 px-4 py-2 font-medium text-white sm:inline focus:outline-none focus:ring hover:bg-gray-800"
-      >
-        Save
-      </button>
     </div>
     <div class="flex flex-col gap-4 border-b py-4 sm:flex-row">
       <p class="shrink-0 w-32 font-medium">Full Name</p>
@@ -52,7 +42,7 @@
       <div
         class="flex h-70 w-full flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-gray-300 p-5 text-center"
       >
-        <img src="" class="h-16 w-16 rounded-full" />
+        <div class="h-16 w-16 rounded-full" ref="lottieContainer"></div>
         <p class="text-sm text-gray-600">
           Drop your desired image file here to start the upload
         </p>
@@ -62,20 +52,55 @@
         />
       </div>
     </div>
-    <div class="flex justify-end py-4 sm:hidden">
+    <div
+      class="flex flex-col gap-4 border-b py-4 sm:flex-row sm:justify-center"
+    >
       <button
-        class="mr-2 rounded-lg border-2 px-4 py-2 font-medium text-gray-500 focus:outline-none focus:ring hover:bg-gray-200"
-      >
-        Cancel
-      </button>
-      <button
-        class="rounded-lg border-2 border-transparent bg-blue-600 px-4 py-2 font-medium text-white focus:outline-none focus:ring hover:bg-blue-700"
+        class="rounded-lg border-2 border-transparent bg-gray-950 px-4 py-2 font-medium text-white sm:inline focus:outline-none focus:ring hover:bg-gray-800"
       >
         Save
       </button>
     </div>
   </div>
 </template>
+<script>
+import { Lottie } from "lottie-web";
+
+import animationData from "../assets/animation/account.json";
+export default {
+  mounted() {
+    this.initializeLottie();
+  },
+  methods: {
+    initializeLottie() {
+      if (typeof Lottie === "undefined") {
+        // If Lottie is undefined, attempt to load it
+        import("lottie-web")
+          .then(({ default: lottie }) => {
+            this.loadAnimationWithData(lottie, animationData);
+          })
+          .catch((error) => {
+            console.error("Error loading Lottie:", error);
+          });
+      } else {
+        this.loadAnimationWithData(Lottie, animationData);
+      }
+    },
+    loadAnimationWithData(lottieInstance, animationData) {
+      const container = this.$refs.lottieContainer;
+      if (!container || !lottieInstance || !animationData) return;
+
+      lottieInstance.loadAnimation({
+        container: container,
+        renderer: "svg", // Choose the renderer you want (svg, canvas, html)
+        loop: true,
+        autoplay: true,
+        animationData: animationData, // Your loaded animation data
+      });
+    },
+  },
+};
+</script>
 
 <style scoped>
 @tailwind base;
