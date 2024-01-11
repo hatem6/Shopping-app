@@ -8,7 +8,7 @@
           </h3>
         </div>
       </div>
-      <form @submit.prevent="test" class="space-y-5">
+      <form @submit.prevent="check" class="space-y-5">
         <div>
           <label class="font-medium"> Email </label>
           <input
@@ -61,7 +61,7 @@ export default {
     };
   },
   methods: {
-    async test() {
+    async check() {
       const email = this.email;
       const password = this.password;
       let myjson = {
@@ -90,6 +90,7 @@ export default {
               adress: response.data.adress,
               phone: response.data.phone,
               email: response.data.email,
+              image: null,
             };
             localStorage.setItem("Account", JSON.stringify(account));
             window.location.href = "/account";

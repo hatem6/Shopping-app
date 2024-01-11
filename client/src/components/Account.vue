@@ -11,11 +11,13 @@
     <div class="flex flex-col gap-4 border-b py-4 sm:flex-row">
       <p class="shrink-0 w-32 font-medium">Full Name</p>
       <input
+        v-model="fullname"
         placeholder="Your Full Name"
         class="w-full rounded-md border bg-white px-2 py-2 outline-none ring-gray-600 focus:ring-1"
       />
       <p class="shrink-1 w-32 font-medium">Adress</p>
       <input
+        v-model="adress"
         placeholder="Your Adress"
         class="w-full rounded-md border bg-white px-2 py-2 outline-none ring-gray-600 focus:ring-1"
       />
@@ -23,6 +25,7 @@
     <div class="flex flex-col gap-4 border-b py-4 sm:flex-row">
       <p class="shrink-0 w-32 font-medium">Email</p>
       <input
+        v-model="email"
         placeholder="your.email@domain.com"
         class="w-full rounded-md border bg-white px-2 py-2 outline-none ring-gray-600 focus:ring-1"
       />
@@ -30,6 +33,7 @@
     <div class="flex flex-col gap-4 border-b py-4 sm:flex-row">
       <p class="shrink-0 w-32 font-medium">Phone Number</p>
       <input
+        v-model="phone"
         placeholder="+216 "
         class="w-full rounded-md border bg-white px-2 py-2 outline-none ring-gray-600 focus:ring-1"
       />
@@ -42,12 +46,23 @@
       <div
         class="flex h-70 w-full flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-gray-300 p-5 text-center"
       >
-        <div class="h-16 w-16 rounded-full" ref="lottieContainer"></div>
+        <div
+          v-if="imageBase64 == null"
+          class="h-16 w-16 rounded-full"
+          ref="lottieContainer"
+        ></div>
+        <img
+          v-if="imageBase64 != null"
+          class="h-16 w-16 rounded-full"
+          :src="imageBase64"
+          alt=""
+        />
         <p class="text-sm text-gray-600">
           Drop your desired image file here to start the upload
         </p>
         <input
           type="file"
+          @change="handleImageChange"
           class="max-w-full rounded-lg px-2 font-medium text-blue-600 outline-none ring-blue-600 focus:ring-1"
         />
       </div>
@@ -56,9 +71,10 @@
       class="flex flex-col gap-4 border-b py-4 sm:flex-row sm:justify-center"
     >
       <button
+        @click="saveChanges"
         class="rounded-lg border-2 border-transparent bg-gray-950 px-4 py-2 font-medium text-white sm:inline focus:outline-none focus:ring hover:bg-gray-800"
       >
-        Save
+        Save Changes
       </button>
     </div>
   </div>
@@ -68,9 +84,16 @@ import { Lottie } from "lottie-web";
 
 import animationData from "../assets/animation/account.json";
 export default {
-  mounted() {
-    this.initializeLottie();
+  data() {
+    return {
+      fullname: "",
+      adress: "",
+      email: "",
+      phone: "",
+      imageBase64: null,
+    };
   },
+
   methods: {
     initializeLottie() {
       if (typeof Lottie === "undefined") {
@@ -98,6 +121,38 @@ export default {
         animationData: animationData, // Your loaded animation data
       });
     },
+    getAccountData() {
+      let storedData = localStorage.getItem("Account");
+      this.fullname = JSON.parse(storedData).fullname;
+      this.adress = JSON.parse(storedData).adress;
+      this.email = JSON.parse(storedData).email;
+      this.phone = "+216 " + JSON.parse(storedData).phone;
+    },
+    handleImageChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          // Set the base64 URL to your data property
+          this.imageBase64 = reader.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    saveChanges() {
+      console.log("Base64 URL of the image:", this.imageBase64);
+      let storedAccount = JSON.parse(localStorage.getItem("Account")) || {};
+      storedAccount.image = this.imageBase64;
+      localStorage.setItem("Account", JSON.stringify(storedAccount));
+    },
+  },
+  mounted() {
+    this.initializeLottie();
+    this.getAccountData();
+    const storedImage = JSON.parse(localStorage.getItem("Account")).image;
+    if (storedImage) {
+      this.imageBase64 = storedImage;
+    }
   },
 };
 </script>
