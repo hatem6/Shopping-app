@@ -5,13 +5,14 @@
         <div ref="lottieContainer"></div>
       </div>
       <form
-        onSubmit="event.preventDefault()"
+        @submit.prevent="signUp"
         class="space-y-0 grid grid-cols-1 lg:grid-cols-2 gap-4"
       >
         <div class="">
           <label class="font-medium"> Fall name </label>
           <input
-            type="email"
+            v-model="fullname"
+            type="text"
             required
             class="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
           />
@@ -19,7 +20,8 @@
         <div>
           <label class="font-medium"> adress </label>
           <input
-            type="password"
+            v-model="adress"
+            type="text"
             required
             class="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
           />
@@ -27,7 +29,8 @@
         <div class="lg:col-span-2">
           <label class="font-medium"> Phone Number</label>
           <input
-            type="email"
+            v-model="phone"
+            type="text"
             required
             class="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
           />
@@ -35,6 +38,7 @@
         <div class="lg:col-span-2">
           <label class="font-medium"> Email</label>
           <input
+            v-model="email"
             type="email"
             required
             class="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
@@ -44,6 +48,16 @@
         <div class="lg:col-span-2">
           <label class="font-medium"> Password </label>
           <input
+            v-model="password"
+            type="password"
+            required
+            class="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+          />
+        </div>
+        <div class="lg:col-span-2">
+          <label class="font-medium"> Confirm Password </label>
+          <input
+            v-model="confirmPassword"
             type="password"
             required
             class="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
@@ -60,14 +74,75 @@
   </main>
 </template>
 <script>
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+import axios from "axios";
 import { Lottie } from "lottie-web";
-
 import animationData from "../assets/animation/second.json";
 export default {
-  mounted() {
-    this.initializeLottie();
+  data() {
+    return {
+      fullname: "",
+      adress: "",
+      phone: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      image: "",
+    };
   },
   methods: {
+    async signUp() {
+      try {
+        const response = await axios.post("http://localhost:3001/check", {
+          email: this.email,
+        });
+        console.log(response.data);
+        console.log(this.email);
+
+        if (response.data === false) {
+          if (this.password === this.confirmPassword) {
+            const myjson = {
+              fullname: this.fullname,
+              adress: this.adress,
+              phone: this.phone,
+              email: this.email,
+              password: this.password,
+              image: this.image,
+            };
+
+            try {
+              const response2 = await axios.post(
+                "http://localhost:3001/signup",
+                myjson
+              );
+
+              if (response2.data === true) {
+                window.location.href = "/signin";
+              } else {
+                toast.error("Signup failed!", {
+                  autoClose: 2000, // Optionally set autoClose time
+                });
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("Signup failed");
+            }
+          } else {
+            toast.error("Confirm your password !", {
+              autoClose: 2000, // Optionally set autoClose time
+            });
+          }
+        } else {
+          toast.error("Email already exists!", {
+            autoClose: 2000, // Optionally set autoClose time
+          });
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Error checking email existence");
+      }
+    },
     initializeLottie() {
       if (typeof Lottie === "undefined") {
         // If Lottie is undefined, attempt to load it
@@ -94,6 +169,9 @@ export default {
         animationData: animationData, // Your loaded animation data
       });
     },
+  },
+  mounted() {
+    this.initializeLottie();
   },
 };
 </script>

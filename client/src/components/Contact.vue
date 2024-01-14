@@ -82,7 +82,7 @@ export default {
       const { fullname, email, message } = this;
       try {
         const response = await axios.post(
-          "https://server-qsgu4svzv-hatem6.vercel.app/contact",
+          "https://server-rlwuyzc0s-hatem6.vercel.app/contact",
           {
             fullname,
             email,

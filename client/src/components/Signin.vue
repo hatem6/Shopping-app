@@ -69,7 +69,7 @@ export default {
       };
       try {
         const response = await axios.post(
-          "http://localhost:3001/check",
+          "https://server-rlwuyzc0s-hatem6.vercel.app/check",
           myjson
         );
         if (response.data == false) {
