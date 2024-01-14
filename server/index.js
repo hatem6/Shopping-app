@@ -41,7 +41,7 @@ const transporter = nodemailer.createTransport({
 app.use("/get", requestRouter);
 
 app.post("/signup", async (req, res) => {
-  const { fullname, adress, phone, email, password } = req.body;
+  const { fullname, adress, phone, email, password, image } = req.body;
   try {
     const newClient = new ClientModel({
       fullname,
@@ -49,8 +49,10 @@ app.post("/signup", async (req, res) => {
       phone,
       email,
       password,
+      image,
     });
-    res.json(newClient);
+    res.send(true);
+    console.log("User saved successfully ");
     await newClient.save();
   } catch (error) {
     console.error("Error saving Client:", error);
