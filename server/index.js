@@ -9,6 +9,8 @@ const mongodb_url = process.env.MONGODB_URL;
 const ClientModel = require("./models/Client");
 const ProductsModel = require("./models/Produts");
 const nodemailer = require("nodemailer");
+const bodyParser = require("body-parser");
+app.use(bodyParser.json({ limit: "50mb" }));
 
 app.use(express.json());
 app.use(cors());
@@ -66,6 +68,61 @@ app.post("/check", async (req, res) => {
     const user = await ClientModel.findOne({ email: email });
     if (!user) {
       res.send(false);
+    } else {
+      res.send(user);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error finding user");
+  }
+});
+
+app.put("/update", async (req, res) => {
+  const { email, newImage } = req.body;
+  try {
+    // Check if the user with the provided email exists
+    const user = await ClientModel.findOne({ email: email });
+
+    if (!user) {
+      res.send(false); // User not found
+    } else {
+      // Update the image for the found user
+      user.image = newImage;
+      await user.save(); // Save the changes
+
+      res.send(true);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error finding/updating user");
+  }
+});
+
+app.post("/getImage", async (req, res) => {
+  const { email } = req.body;
+  try {
+    // Check if the user with the provided email exists
+    const user = await ClientModel.findOne({ email: email });
+
+    if (!user) {
+      res.send(false); // User not found
+    } else {
+      res.send(user.image);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error finding user");
+  }
+});
+
+app.post("/display", async (req, res) => {
+  const { email } = req.body;
+  try {
+    // Check if the user with the provided email exists
+    const user = await ClientModel.findOne({ email: email });
+
+    if (!user) {
+      res.send(false); // User not found
     } else {
       res.send(user);
     }
