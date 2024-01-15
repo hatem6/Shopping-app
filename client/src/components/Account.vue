@@ -81,6 +81,8 @@
 </template>
 <script>
 import { Lottie } from "lottie-web";
+import axios from "axios";
+import imageCompressor from "image-compressor.js";
 
 import animationData from "../assets/animation/account.json";
 export default {
@@ -91,6 +93,8 @@ export default {
       email: "",
       phone: "",
       imageBase64: null,
+      update: false,
+      storedImage: "",
     };
   },
 
@@ -128,7 +132,7 @@ export default {
       this.email = JSON.parse(storedData).email;
       this.phone = "+216 " + JSON.parse(storedData).phone;
     },
-    handleImageChange(event) {
+    async handleImageChange(event) {
       const file = event.target.files[0];
       if (file) {
         const reader = new FileReader();
@@ -139,20 +143,47 @@ export default {
         reader.readAsDataURL(file);
       }
     },
-    saveChanges() {
-      console.log("Base64 URL of the image:", this.imageBase64);
-      let storedAccount = JSON.parse(localStorage.getItem("Account")) || {};
-      storedAccount.image = this.imageBase64;
-      localStorage.setItem("Account", JSON.stringify(storedAccount));
+    async saveChanges() {
+      const email = this.email;
+      const newImage = this.imageBase64;
+      let myjson = {
+        email,
+        newImage,
+      };
+      try {
+        const response = await axios.put(
+          "http://localhost:3001/update",
+          myjson
+        );
+        console.log(response);
+        if (response.data == true) {
+          console.log("Changes Succes");
+          this.update = true;
+        } else {
+          console.log("no update");
+        } /*
+        const response2 = await axios.post(
+          "http://localhost:3001/getImage",
+          email
+        );
+        console.log(response2.data);
+        this.storedImage = response2.data;
+        */
+      } catch (error) {
+        console.error("Error while checking the account :", error);
+      }
     },
   },
   mounted() {
     this.initializeLottie();
     this.getAccountData();
-    const storedImage = JSON.parse(localStorage.getItem("Account")).image;
+    /*const storedImage = JSON.parse(localStorage.getItem("Account")).image;
     if (storedImage) {
       this.imageBase64 = storedImage;
-    }
+    } 
+    if (this.update) {
+      this.imageBase64 = this.storedImage;
+    }*/
   },
 };
 </script>
